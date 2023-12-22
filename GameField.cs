@@ -15,34 +15,12 @@
             }
         }
 
-        private char SymDivide;
-        public char Sym_Divide
-        {
-            get { return SymDivide; }
-            set
-            {
-                SymDivide = GridField is not null ? value : '\0';
-            }
-        }
-
         public GameField() 
         {
             SizeRow = 7;
-            SizeCol = 11;
+            SizeCol = 21;
             GridField = new char[SizeRow, SizeCol];
             SymGrid = '-';
-            SymDivide = '.';
-
-            if (GridField is not null)
-            {
-                for (int i = 0; i != SizeRow; i++)
-                {
-                    for(int j = 0; j != SizeCol; j++)
-                    {
-                        GridField[i, j] = SymGrid;
-                    }
-                }
-            }
         }
 
         private static void BorderH(in int size)
@@ -62,22 +40,35 @@
             Console.Write("  ");
         }
 
-        public void ShowGrid()
+        private static void FillColorPlayer(in char SymbolGrid, in char SymbolPlayerUser)
         {
-            BorderH(SizeCol + SizeCol + 5);
+            Console.BackgroundColor = SymbolGrid == SymbolPlayerUser ? ConsoleColor.Red : ConsoleColor.Magenta;
+            Console.Write($"{SymbolGrid}");
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+        }
+
+        public void ShowGrid(in PlayerPL? PlayerUser)
+        {
+            char SymbolPlayerlUser = PlayerUser is not null ? PlayerUser.Figure_PL.S_FigurePL : '\0';
+
+            BorderH(SizeCol + 4);
             for (int i = 0; i != SizeRow; i++)
             {
                 BorderV();
                 Console.BackgroundColor = ConsoleColor.DarkBlue;
-                Console.Write('.');
                 for (int j = 0; j != SizeCol; j++)
                 {
-                    Console.Write($"{GridField[i, j]}.");
+                    if(GridField[i, j] != '\0')
+                    {
+                        FillColorPlayer(GridField[i, j], SymbolPlayerlUser);
+                        continue;
+                    }                   
+                    Console.Write(SymGrid);
                 }
                 BorderV();
                 Console.WriteLine();
             }
-            BorderH(SizeCol + SizeCol + 5);
+            BorderH(SizeCol + 4);
         }
 
         public void FillGrid(in PlayerPL? PlayerUser)

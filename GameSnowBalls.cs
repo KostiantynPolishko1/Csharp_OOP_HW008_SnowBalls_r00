@@ -25,7 +25,7 @@
         {
             IsPlaying();
             Grid.FillGrid(PlayerUser!);
-            Grid.ShowGrid();
+            Grid.ShowGrid(PlayerUser!);
         }
 
     }
