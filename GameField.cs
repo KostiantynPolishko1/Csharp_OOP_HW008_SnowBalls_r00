@@ -2,8 +2,8 @@
 {
     public class GameField
     {
-        private const int SizeRow = 11;
-        private const int SizeCol = 17;
+        public readonly int SizeRow;
+        public readonly int SizeCol;
         public char[,]? GridField { get; set; }
         private char SymGrid;
         public char Sym_Grid
@@ -26,9 +26,11 @@
         }
 
         public GameField() 
-        { 
+        {
+            SizeRow = 7;
+            SizeCol = 11;
             GridField = new char[SizeRow, SizeCol];
-            SymGrid = 'x';
+            SymGrid = '-';
             SymDivide = '.';
 
             if (GridField is not null)
@@ -76,6 +78,20 @@
                 Console.WriteLine();
             }
             BorderH(SizeCol + SizeCol + 5);
+        }
+
+        public void FillGrid(in PlayerPL? PlayerUser)
+        {
+            int size = PlayerUser is not null ? PlayerUser.Figure_PL.Plate.GetLength(0) : 0;
+            char symbol = PlayerUser is not null ? PlayerUser.Figure_PL.S_FigurePL : '\0';
+
+            for (int i = 0; i != size; i++)
+            {
+                int row = PlayerUser.Figure_PL.Plate[i, 0];
+                int col = PlayerUser.Figure_PL.Plate[i, 1];
+
+                GridField[row, col] = symbol;
+            }
         }
     }
 }
