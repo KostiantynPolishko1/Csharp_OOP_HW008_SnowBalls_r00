@@ -42,7 +42,7 @@
 
         private static void FillColorPlayer(in char SymbolGrid, in char SymbolPlayerUser)
         {
-            Console.BackgroundColor = SymbolGrid == SymbolPlayerUser ? ConsoleColor.Red : ConsoleColor.Magenta;
+            Console.BackgroundColor = SymbolGrid == SymbolPlayerUser ? ConsoleColor.Red : ConsoleColor.Yellow;
             Console.Write($"{SymbolGrid}");
             Console.BackgroundColor = ConsoleColor.DarkBlue;
         }
@@ -71,15 +71,15 @@
             BorderH(SizeCol + 4);
         }
 
-        public void FillGrid(in PlayerPL? PlayerUser)
+        public void FillGrid(in PlayerPL? Player)
         {
-            int size = PlayerUser is not null ? PlayerUser.Figure_PL.Plate.GetLength(0) : 0;
-            char symbol = PlayerUser is not null ? PlayerUser.Figure_PL.S_FigurePL : '\0';
+            int size = Player is not null ? Player.Figure_PL.Plate.GetLength(0) : 0;
+            char symbol = Player is not null ? Player.Figure_PL.S_FigurePL : '\0';
 
             for (int i = 0; i != size; i++)
             {
-                int row = PlayerUser.Figure_PL.Plate[i, 0];
-                int col = PlayerUser.Figure_PL.Plate[i, 1];
+                int row = Player.Figure_PL.Plate[i, 0];
+                int col = Player.Figure_PL.Plate[i, 1];
 
                 GridField[row, col] = symbol;
             }
