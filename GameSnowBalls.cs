@@ -2,6 +2,7 @@
 {
     public class GameSnowBalls
     {
+        private bool FlagMove;
         private int dxUser { get; set; }
         private int dxComp { get; set; }
         private GameField? Grid { get; set; }
@@ -16,6 +17,7 @@
                 PlayerComp = new(0, (int)(Grid.SizeCol / 2) - 1, 'c');
                 dxUser = 0;
                 dxComp = 0;
+                FlagMove = true;
             }
         }
 
@@ -35,25 +37,38 @@
             return 0;
         }
 
+        private int OffsetComp(in int IndexCol, in int LenPlate)
+        {
+            if (IndexCol == Grid.SizeCol-1) { FlagMove = false; }
+            else if(IndexCol == LenPlate - 1) { FlagMove = true; }
+
+            if (FlagMove) { return 1; }
+            else { return -1; }
+        }
+
         public void ShowGame()
         {
             IsPlaying();
-            ConsoleKeyInfo press;
+            //ConsoleKeyInfo press;
 
             do
             {
                 Grid.FillGrid(PlayerUser!);
                 Grid.FillGrid(PlayerComp!);
                 Grid.ShowGrid(PlayerUser!);
+                Thread.Sleep(30);
 
-                press = Console.ReadKey();
-                dxUser = OffsetUser(press);
+                //press = Console.ReadKey();
+                //dxUser = OffsetUser(press);
+                //PlayerUser.Figure_PL.UpdatePosition(dxUser, Grid.SizeCol);
 
-                PlayerUser.Figure_PL.UpdatePosition(dxUser, Grid.SizeCol);
+                dxComp = OffsetComp(PlayerComp.Figure_PL.Plate[PlayerComp.Figure_PL.Plate.GetLength(0) - 1, 1], PlayerComp.Figure_PL.Plate.GetLength(0));
+                PlayerComp.Figure_PL.UpdatePosition(dxComp, Grid.SizeCol);
+
                 Grid.ClearGrid();
                 Console.Clear();
 
-            } while (press.Key != ConsoleKey.Escape);
+            } while (true);//(press.Key != ConsoleKey.Escape);
         }
 
     }
