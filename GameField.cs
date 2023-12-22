@@ -84,5 +84,10 @@
                 GridField[row, col] = symbol;
             }
         }
+
+        public void ClearGrid()
+        {
+            Array.Clear(GridField);
+        }
     }
 }

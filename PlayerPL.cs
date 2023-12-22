@@ -8,5 +8,6 @@
         {
             Figure_PL = new(PosRow, PosCol, SymPlayer);
         }
+
     }
 }
