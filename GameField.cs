@@ -4,6 +4,7 @@
     {
         public readonly int SizeRow;
         public readonly int SizeCol;
+        public readonly ConsoleColor Color;
         public char[,]? GridField { get; set; }
         private char SymGrid;
         public char Sym_Grid
@@ -19,6 +20,7 @@
         {
             SizeRow = 7;
             SizeCol = 21;
+            Color = ConsoleColor.White;
             GridField = new char[SizeRow, SizeCol];
             SymGrid = '-';
         }
@@ -40,27 +42,41 @@
             Console.Write("  ");
         }
 
-        private static void FillColorPlayer(in char SymbolGrid, in char SymbolPlayerUser)
+        private void FillColor(in char SymbolGrid, in int Row, in int Col, in PlayerPL? PlayerUser, in PlayerPL? PlayerComp)
         {
-            Console.BackgroundColor = SymbolGrid == SymbolPlayerUser ? ConsoleColor.Red : ConsoleColor.Yellow;
+            char SymbolPlayer = PlayerUser is not null ? PlayerUser.Figure_PL.S_FigurePL : '\0';
+            char SymbolComp = PlayerComp is not null ? PlayerComp.Figure_PL.S_FigurePL : '\0';
+
+            if (SymbolGrid == SymbolPlayer) { Console.BackgroundColor = PlayerUser.Figure_PL.Color; }
+
+            else if (SymbolGrid == SymbolComp) { Console.BackgroundColor = PlayerComp.Figure_PL.Color; }
+
+            if (PlayerUser.Ball is not null && (Row == PlayerUser.Ball.PositionBall[0, 0] && Col == PlayerUser.Ball.PositionBall[0, 1]))
+            { 
+                Console.BackgroundColor = PlayerUser.Ball.Color; 
+            }
+            else if (PlayerComp.Ball is not null && (Row == PlayerComp.Ball.PositionBall[0, 0] && Col == PlayerComp.Ball.PositionBall[0, 1]))
+            {
+                Console.BackgroundColor = PlayerComp.Ball.Color;
+            }
+
             Console.Write($"{SymbolGrid}");
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.BackgroundColor = this.Color;
         }
 
-        public void ShowGrid(in PlayerPL? PlayerUser)
+        public void ShowGrid(in PlayerPL? PlayerUser, in PlayerPL? PlayerComp)
         {
-            char SymbolPlayerlUser = PlayerUser is not null ? PlayerUser.Figure_PL.S_FigurePL : '\0';
-
+            Console.ForegroundColor = ConsoleColor.White;
             BorderH(SizeCol + 4);
             for (int i = 0; i != SizeRow; i++)
             {
                 BorderV();
-                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                Console.BackgroundColor = this.Color;
                 for (int j = 0; j != SizeCol; j++)
                 {
                     if(GridField[i, j] != '\0')
                     {
-                        FillColorPlayer(GridField[i, j], SymbolPlayerlUser);
+                        FillColor(GridField[i, j], i, j, PlayerUser!, PlayerComp!);
                         continue;
                     }                   
                     Console.Write(SymGrid);
@@ -71,17 +87,17 @@
             BorderH(SizeCol + 4);
         }
 
-        public void FillGrid(in PlayerPL? Player)
+        public void FillGrid(in PlayerPL Player)
         {
-            int size = Player is not null ? Player.Figure_PL.Plate.GetLength(0) : 0;
-            char symbol = Player is not null ? Player.Figure_PL.S_FigurePL : '\0';
+            if (Player.Figure_PL is not null) { FigureToGrid(Player.Figure_PL.Plate, Player.Figure_PL.S_FigurePL); }
+            if (Player.Ball is not null) { FigureToGrid(Player.Ball.PositionBall, Player.Ball.SymbolBall); }
 
-            for (int i = 0; i != size; i++)
+            void FigureToGrid(in int[,]? Figure, in char symbol)
             {
-                int row = Player.Figure_PL.Plate[i, 0];
-                int col = Player.Figure_PL.Plate[i, 1];
-
-                GridField[row, col] = symbol;
+                for (int i = 0; i != Figure.GetLength(0); i++)
+                {
+                    GridField[Figure[i, 0], Figure[i, 1]] = symbol;
+                }
             }
         }
 
