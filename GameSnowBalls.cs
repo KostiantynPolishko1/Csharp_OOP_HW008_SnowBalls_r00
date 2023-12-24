@@ -28,6 +28,14 @@ namespace SnowBalls
             }
         }
 
+        private void ShowBlock()
+        {
+            Grid.FillGrid(PlayerUser!);
+            Grid.FillGrid(PlayerComp!);
+            Grid.ShowGrid(PlayerUser!, PlayerComp!);
+            Thread.Sleep(30);
+        }
+
         private int OffsetUser(ConsoleKeyInfo press)
         {
             if (press.Key == ConsoleKey.RightArrow) { return 1; }
@@ -44,26 +52,47 @@ namespace SnowBalls
             else { return -1; }
         }
 
+        private void PushSnowBall(ConsoleKeyInfo press, in SnowBall Ball)
+        {
+            int Row_StartPos = Ball.PositionBall[0, 0];
+            int dy = Ball.PositionBall[0, 0] - 1 == 0 ? 1 : -1;
+            int Limit = Ball.PositionBall[0, 0] - 1 == 0 ? Grid.SizeRow - 1 : 0;
+
+            while (Ball.PositionBall[0, 0] != Limit)
+            {
+                Console.Clear();
+                Ball.PositionBall[0, 0] += dy;
+                ShowBlock();
+                Grid.ClearGrid();
+
+            }
+
+            Ball.PositionBall[0, 0] = Row_StartPos;
+        }
+
         public void ShowGame()
         {
             IsPlaying();
             ConsoleKeyInfo press;
             int dxUser;
             int dxComp;
+
             do
             {
-                Grid.FillGrid(PlayerUser!);
-                Grid.FillGrid(PlayerComp!);
-                Grid.ShowGrid(PlayerUser!, PlayerComp!);
-                Thread.Sleep(30);
-
+                ShowBlock();
+                
                 press = Console.ReadKey();
-                dxUser = OffsetUser(press);
-                //PlayerUser.Figure_PL.UpdatePosition(dxUser, Grid.SizeCol);
-                PlayerUser.UpdatePosPlayer(dxUser, Grid.SizeCol);
+                if(press.Key == ConsoleKey.UpArrow || press.Key == ConsoleKey.DownArrow)
+                {
+                    PushSnowBall(press, PlayerUser.Ball);
+                }
+                else if(press.Key == ConsoleKey.LeftArrow || press.Key == ConsoleKey.RightArrow)
+                {
+                    dxUser = OffsetUser(press);
+                    PlayerUser.UpdatePosPlayer(dxUser, Grid.SizeCol);
+                }
 
                 dxComp = OffsetComp(PlayerComp.Figure_PL.Plate[PlayerComp.Figure_PL.Plate.GetLength(0) - 1, 1], PlayerComp.Figure_PL.Plate.GetLength(0));
-                //PlayerComp.Figure_PL.UpdatePosition(dxComp, Grid.SizeCol);
                 PlayerComp.UpdatePosPlayer(dxComp, Grid.SizeCol);
 
                 Grid.ClearGrid();

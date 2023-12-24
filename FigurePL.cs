@@ -25,14 +25,5 @@
                 Plate[i, 1] += dx;
             }
         }
-
-/*        public void UpdatePosition(in int dx, in int SizeCol)
-        {
-            bool flag = false;
-            if(dx == 1) { flag = Plate[Plate.GetLength(0)-1,1] + dx != SizeCol ? true : false; }
-            else { flag = Plate[0, 1] + dx != -1 ? true : false; }
-
-            if (flag) { SetPosition(0, dx); }
-        }*/
     }
 }
