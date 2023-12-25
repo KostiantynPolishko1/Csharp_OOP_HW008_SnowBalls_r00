@@ -1,4 +1,4 @@
-﻿using SnowBalls;
+﻿using SnowBalls.Games;
 
 //================MAIN================//
 

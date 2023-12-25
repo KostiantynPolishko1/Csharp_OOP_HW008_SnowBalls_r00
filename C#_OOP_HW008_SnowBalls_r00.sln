@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C#_OOP_HW008_SnowBalls_r00", "C#_OOP_HW008_SnowBalls_r00.csproj", "{EA2151AF-1236-449F-8414-120323076A04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C#_OOP_HW008_SnowBalls_r00", "C#_OOP_HW008_SnowBalls_r00.csproj", "{EA2151AF-1236-449F-8414-120323076A04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
