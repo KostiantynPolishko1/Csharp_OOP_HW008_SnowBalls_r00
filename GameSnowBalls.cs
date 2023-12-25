@@ -8,6 +8,7 @@ namespace SnowBalls
         private GameField? Grid { get; set; }
         private PlayerPL? PlayerUser { get; set; }
         private PlayerPL? PlayerComp { get; set; }
+        private PlayerBurst? Obj_PlayerBurst { get; set; }
         public GameSnowBalls() 
         {
             Grid = new GameField();
@@ -15,6 +16,8 @@ namespace SnowBalls
             {
                 PlayerUser = new(Grid.SizeRow - 1, (int)(Grid.SizeCol / 2) - 1, 'u', ConsoleColor.DarkRed);
                 PlayerComp = new(0, (int)(Grid.SizeCol / 2) - 1, 'c', ConsoleColor.DarkYellow, false);
+                Obj_PlayerBurst = new(PlayerUser.Ball);
+
                 FlagMove = true;
             }
         }
@@ -28,11 +31,15 @@ namespace SnowBalls
             }
         }
 
-        private void ShowBlock(in int TimePausa)
+        private void ShowBlock(in int TimePausa, bool flag = false)
         {
             Grid.FillGrid(PlayerUser!);
             Grid.FillGrid(PlayerComp!);
-            Grid.ShowGrid(PlayerUser!, PlayerComp!);
+            if (flag)
+            {
+                Grid.FigureToGrid(Obj_PlayerBurst.BurstCoord, Obj_PlayerBurst.Symbol);
+            }
+            Grid.ShowGrid(PlayerUser!, PlayerComp!, Obj_PlayerBurst!);
             Thread.Sleep(TimePausa);
         }
 
@@ -56,7 +63,7 @@ namespace SnowBalls
         {
             return Grid.GridField[Ball.PositionBall[0, 0], Ball.PositionBall[0, 1]] == PlayerComp.Figure_PL.S_FigurePL;
         }
-        private void PushSnowBall(ConsoleKeyInfo press, in SnowBall Ball, in PlayerPL PlayerComp)
+        private void PushSnowBall(ConsoleKeyInfo press, in SnowBall Ball, in PlayerPL? PlayerComp)
         {
             int dxComp;
             int dy = Ball.PositionBall[0, 0] - 1 == 0 ? 1 : -1;
@@ -72,6 +79,15 @@ namespace SnowBalls
                 { 
                     if (IsOpponent(Ball, PlayerComp))
                     {
+                        Grid.ClearGrid();
+                        Console.Clear();
+                        this.PlayerComp.Figure_PL = null;
+                        this.PlayerComp.Ball = null;
+                        this.PlayerComp = null;
+
+                        Obj_PlayerBurst.SetObjPosition(Ball);
+
+                        ShowBlock(0, true);
                         Environment.Exit(0);
                     }
                 }
