@@ -1,1 +1,6 @@
-# C#_OOP_HW008_SnowBalls_r00
+ITSTEP Academy
+PR321
+C#.NET
+
+C#_OOP_HW008_SnowBalls_r00
+GAME SNOW BALLS
