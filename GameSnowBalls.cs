@@ -28,12 +28,12 @@ namespace SnowBalls
             }
         }
 
-        private void ShowBlock()
+        private void ShowBlock(in int TimePausa)
         {
             Grid.FillGrid(PlayerUser!);
             Grid.FillGrid(PlayerComp!);
             Grid.ShowGrid(PlayerUser!, PlayerComp!);
-            Thread.Sleep(30);
+            Thread.Sleep(TimePausa);
         }
 
         private int OffsetUser(ConsoleKeyInfo press)
@@ -52,9 +52,13 @@ namespace SnowBalls
             else { return -1; }
         }
 
-        private void PushSnowBall(ConsoleKeyInfo press, in SnowBall Ball)
+        private bool IsOpponent(in SnowBall Ball, in PlayerPL PlayerComp)
         {
-            int Row_StartPos = Ball.PositionBall[0, 0];
+            return Grid.GridField[Ball.PositionBall[0, 0], Ball.PositionBall[0, 1]] == PlayerComp.Figure_PL.S_FigurePL;
+        }
+        private void PushSnowBall(ConsoleKeyInfo press, in SnowBall Ball, in PlayerPL PlayerComp)
+        {
+            int dxComp;
             int dy = Ball.PositionBall[0, 0] - 1 == 0 ? 1 : -1;
             int Limit = Ball.PositionBall[0, 0] - 1 == 0 ? Grid.SizeRow - 1 : 0;
 
@@ -62,12 +66,32 @@ namespace SnowBalls
             {
                 Console.Clear();
                 Ball.PositionBall[0, 0] += dy;
-                ShowBlock();
+                ShowBlock(10);
+
+                if(Ball.PositionBall[0, 0] == 0)
+                { 
+                    if (IsOpponent(Ball, PlayerComp))
+                    {
+                        Environment.Exit(0);
+                    }
+                }
+
                 Grid.ClearGrid();
 
-            }
+                int count = 5;
+                while (count != 0)
+                {
+                    Console.Clear();
 
-            Ball.PositionBall[0, 0] = Row_StartPos;
+                    dxComp = OffsetComp(PlayerComp.Figure_PL.Plate[PlayerComp.Figure_PL.Plate.GetLength(0) - 1, 1], PlayerComp.Figure_PL.Plate.GetLength(0));
+                    PlayerComp.UpdatePosPlayer(dxComp, Grid.SizeCol);
+                    count -= 1;
+
+                    ShowBlock(3);
+                    Grid.ClearGrid();
+                }
+
+            }
         }
 
         public void ShowGame()
@@ -79,12 +103,16 @@ namespace SnowBalls
 
             do
             {
-                ShowBlock();
+                ShowBlock(30);
                 
                 press = Console.ReadKey();
                 if(press.Key == ConsoleKey.UpArrow || press.Key == ConsoleKey.DownArrow)
                 {
-                    PushSnowBall(press, PlayerUser.Ball);
+                    int Row_StartPos = PlayerUser.Ball.PositionBall[0, 0];
+
+                    PushSnowBall(press, PlayerUser.Ball, PlayerComp);
+
+                    PlayerUser.Ball.PositionBall[0, 0] = Row_StartPos;
                 }
                 else if(press.Key == ConsoleKey.LeftArrow || press.Key == ConsoleKey.RightArrow)
                 {
