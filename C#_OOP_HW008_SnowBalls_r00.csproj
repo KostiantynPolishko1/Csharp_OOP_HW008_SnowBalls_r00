@@ -8,4 +8,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lib_SnowBalls\Lib_SnowBalls.csproj" />
+  </ItemGroup>
+
 </Project>
